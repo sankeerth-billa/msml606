@@ -24,7 +24,21 @@ class HomeWork2:
     #     3   4
 
     def constructBinaryTree(self, input) -> TreeNode:
-        pass
+        stack = []
+        operators = {"+", "-", "*", "/"}  # supported operators
+
+        for token in input:
+            if token in operators:
+                right = stack.pop()
+                left = stack.pop()
+                node = TreeNode(token)
+                node.left = left
+                node.right = right
+                stack.append(node)
+            else:
+                # Keep operands as string to match CSV
+                stack.append(TreeNode(token))
+        return stack.pop()
 
 
 
@@ -55,7 +69,17 @@ class HomeWork2:
     # you can see the examples in p2_traversals.csv
 
     def postfixNotationPrint(self, head: TreeNode) -> list:
-        pass
+        result = []
+
+        def dfs(node):
+            if not node:
+                return
+            dfs(node.left)
+            dfs(node.right)
+            result.append(node.val)
+
+        dfs(head)
+        return result
 
 
 class Stack:
