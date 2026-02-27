@@ -15,7 +15,7 @@ class HomeWork2:
     # there are no duplicate numeric values in the input
     # support basic operators: +, -, *, /
 
-    # output -> the root node of the expression tree. Here: [*,+,2,3,4,None,None]
+    # output -> the root node of the constructed expression tree. Here: [*,+,2,3,4,None,None]
     # Tree Node with * as root node, the tree should be as follows
     #         *
     #        / \
@@ -41,7 +41,6 @@ class HomeWork2:
         return stack.pop()
 
 
-
     # Problem 2.1: Use pre-order traversal (root, left, right) to generate prefix notation
     # return an array of elements of a prefix expression
     # expected output for the tree from problem 1 is [*,+,3,4,2]
@@ -65,7 +64,7 @@ class HomeWork2:
 
 
     # Problem 2.2: Use in-order traversal (left, root, right) for infix notation with appropriate parentheses.
-    # return an array of elements of an infix expression
+    # return an array of elements of a infix expression
     # expected output for the tree from problem 1 is [(,(,3,+,4,),*,2,)]
     # you can see the examples in p2_traversals.csv
 
@@ -117,8 +116,23 @@ class Stack:
     # Use your own stack implementation to solve problem 3
 
     def __init__(self):
-        # TODO: initialize the stack
-        pass
+        self.items = []
+
+    def push(self, val):
+        self.items.append(val)
+
+    def pop(self):
+        if not self.items:
+            raise IndexError("pop from empty stack")
+        return self.items.pop()
+
+    def peek(self):
+        if not self.items:
+            raise IndexError("peek from empty stack")
+        return self.items[-1]
+
+    def is_empty(self):
+        return len(self.items) == 0
 
     # Problem 3: Write code to evaluate a postfix expression using stack and return the integer value
     # Use stack which you implemented above for this problem
@@ -133,9 +147,30 @@ class Stack:
 
     # DO NOT USE EVAL function for evaluating the expression
 
-    def evaluatePostfix(exp: str) -> int:
-        # TODO: implement this using your Stack class
-        pass
+    def evaluatePostfix(self, exp: str) -> int:
+        operators = {"+", "-", "*", "/"}
+        tokens = exp.split()
+        self.items = []
+
+        for token in tokens:
+            if token not in operators:
+                self.push(int(token))
+            else:
+                b = self.pop()
+                a = self.pop()
+                if token == "+":
+                    self.push(a + b)
+                elif token == "-":
+                    self.push(a - b)
+                elif token == "*":
+                    self.push(a * b)
+                elif token == "/":
+                    if b == 0:
+                        raise ZeroDivisionError("Division by zero")
+                    self.push(a // b)
+        if len(self.items) != 1:
+            raise ValueError("Invalid postfix expression")
+        return self.pop()
 
 
 # Main Function. Do not edit the code below
